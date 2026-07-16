@@ -17,7 +17,7 @@ Change these assumptions here before implementation if the project targets real 
 ## Milestone 0 — Project foundation
 
 - [x] Create a Cargo workspace for the kernel and supporting crates
-- [ ] Select and pin a Rust toolchain
+- [x] Select and pin a Rust toolchain
 - [ ] Add the RISC-V compilation target and target configuration
 - [ ] Configure panic behavior, linker arguments, and kernel build profiles
 - [ ] Add a linker script defining the kernel memory layout

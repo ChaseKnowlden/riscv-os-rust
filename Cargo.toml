@@ -9,8 +9,8 @@ members = [
 [workspace.package]
 edition = "2024"
 publish = false
+rust-version = "1.95.0"
 
 [workspace.dependencies]
 riscvrust-arch = { path = "crates/arch" }
 riscvrust-sbi = { path = "crates/sbi" }
-

@@ -3,7 +3,7 @@ name = "riscvrust-sbi"
 version = "0.1.0"
 edition.workspace = true
 publish.workspace = true
+rust-version.workspace = true
 
 [dependencies]
 riscvrust-arch.workspace = true
-
