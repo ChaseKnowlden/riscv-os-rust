@@ -1,0 +1,16 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/arch",
+    "crates/sbi",
+    "kernel",
+]
+
+[workspace.package]
+edition = "2024"
+publish = false
+
+[workspace.dependencies]
+riscvrust-arch = { path = "crates/arch" }
+riscvrust-sbi = { path = "crates/sbi" }
+
