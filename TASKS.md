@@ -19,7 +19,7 @@ Change these assumptions here before implementation if the project targets real 
 - [x] Create a Cargo workspace for the kernel and supporting crates
 - [x] Select and pin a Rust toolchain
 - [x] Add the RISC-V compilation target and target configuration
-- [ ] Configure panic behavior, linker arguments, and kernel build profiles
+- [x] Configure panic behavior, linker arguments, and kernel build profiles
 - [ ] Add a linker script defining the kernel memory layout
 - [ ] Add assembly entry code that initializes the stack and calls Rust
 - [ ] Add `make`, `just`, or Cargo aliases for build, run, debug, and test
