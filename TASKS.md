@@ -21,7 +21,7 @@ Change these assumptions here before implementation if the project targets real 
 - [x] Add the RISC-V compilation target and target configuration
 - [x] Configure panic behavior, linker arguments, and kernel build profiles
 - [x] Add a linker script defining the kernel memory layout
-- [ ] Add assembly entry code that initializes the stack and calls Rust
+- [x] Add assembly entry code that initializes the stack and calls Rust
 - [ ] Add `make`, `just`, or Cargo aliases for build, run, debug, and test
 - [ ] Add a QEMU launch configuration for the `virt` machine
 - [ ] Document prerequisites and first-boot instructions in `README.md`

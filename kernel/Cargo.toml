@@ -8,3 +8,9 @@ rust-version.workspace = true
 [dependencies]
 riscvrust-arch.workspace = true
 riscvrust-sbi.workspace = true
+
+[[bin]]
+name = "riscvrust-kernel"
+path = "src/main.rs"
+test = false
+bench = false
