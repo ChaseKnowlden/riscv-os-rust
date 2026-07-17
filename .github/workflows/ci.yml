@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  checks:
+    name: Format, lint, build, and test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Install pinned Rust toolchain
+        run: rustup show active-toolchain
+
+      - name: Check formatting
+        run: cargo fmt --all -- --check
+
+      - name: Run Clippy
+        run: cargo clippy --workspace --lib --bins --locked -- -D warnings
+
+      - name: Build debug kernel
+        run: cargo build -p riscvrust-kernel --bin riscvrust-kernel --locked
+
+      - name: Build release kernel
+        run: cargo build -p riscvrust-kernel --bin riscvrust-kernel --release --locked
+
+      - name: Run host tests
+        run: cargo test --workspace --target x86_64-unknown-linux-gnu --locked
