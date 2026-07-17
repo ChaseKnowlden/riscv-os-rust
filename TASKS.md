@@ -24,7 +24,7 @@ Change these assumptions here before implementation if the project targets real 
 - [x] Add assembly entry code that initializes the stack and calls Rust
 - [x] Add `make`, `just`, or Cargo aliases for build, run, debug, and test
 - [x] Add a QEMU launch configuration for the `virt` machine
-- [ ] Document prerequisites and first-boot instructions in `README.md`
+- [x] Document prerequisites and first-boot instructions in `README.md`
 - [ ] Add formatting, linting, and build checks to CI
 
 **Exit criterion:** QEMU loads the kernel and reaches a Rust entry function reproducibly.
