@@ -2,6 +2,7 @@
 target = "riscv64gc-unknown-none-elf"
 
 [target.riscv64gc-unknown-none-elf]
+runner = "scripts/qemu-virt"
 rustflags = [
     "-C", "link-arg=-Tkernel/linker.ld",
     "-C", "link-arg=--gc-sections",

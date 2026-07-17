@@ -1,0 +1,51 @@
+#!/bin/sh
+
+set -eu
+
+debug=false
+if [ "${1:-}" = "--debug" ]; then
+    debug=true
+    shift
+fi
+
+if [ "$#" -lt 1 ]; then
+    echo "usage: qemu-virt [--debug] <kernel> [qemu arguments...]" >&2
+    exit 2
+fi
+
+kernel=$1
+shift
+
+if [ ! -f "$kernel" ]; then
+    echo "qemu-virt: kernel image not found: $kernel" >&2
+    exit 2
+fi
+
+qemu=${QEMU:-qemu-system-riscv64}
+gdb_port=${GDB_PORT:-1234}
+
+if [ "$debug" = true ]; then
+    exec "$qemu" \
+        -machine virt \
+        -cpu rv64 \
+        -smp 1 \
+        -m 128M \
+        -bios default \
+        -kernel "$kernel" \
+        -nographic \
+        -no-reboot \
+        -S \
+        -gdb "tcp::$gdb_port" \
+        "$@"
+fi
+
+exec "$qemu" \
+    -machine virt \
+    -cpu rv64 \
+    -smp 1 \
+    -m 128M \
+    -bios default \
+    -kernel "$kernel" \
+    -nographic \
+    -no-reboot \
+    "$@"
