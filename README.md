@@ -75,6 +75,9 @@ The final line is emitted by the kernel through the SBI debug console and
 confirms that execution reached Rust successfully. The kernel then parks the
 hart, so no further output is expected yet.
 
+If the kernel panics, it prints a `KERNEL PANIC` diagnostic containing the
+source file, line, column, and panic message before parking the hart.
+
 Press `Ctrl-A`, then `X`, to exit QEMU's non-graphical console.
 
 ## Build and test
