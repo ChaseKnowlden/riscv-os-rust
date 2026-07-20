@@ -16,6 +16,17 @@ _start:
     andi sp, sp, -16
     mv s0, zero
 
+    # The linker guarantees that both boundaries are 16-byte aligned, so
+    # clearing one machine word at a time cannot run past the section.
+    la t0, __bss_start
+    la t1, __bss_end
+.Lclear_bss:
+    bgeu t0, t1, .Lbss_cleared
+    sd zero, 0(t0)
+    addi t0, t0, 8
+    j .Lclear_bss
+.Lbss_cleared:
+
     call rust_main
 
     # rust_main is non-returning; park the hart if that contract is violated.
@@ -24,4 +35,3 @@ _start:
     j .Lhalt
 
     .size _start, . - _start
-

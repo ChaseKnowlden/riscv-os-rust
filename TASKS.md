@@ -31,7 +31,7 @@ Change these assumptions here before implementation if the project targets real 
 
 ## Milestone 1 — Boot and diagnostics
 
-- [ ] Clear `.bss` during early boot
+- [x] Clear `.bss` during early boot
 - [ ] Preserve the hart ID and device-tree pointer passed by firmware
 - [ ] Implement an SBI call wrapper
 - [ ] Implement early console output
