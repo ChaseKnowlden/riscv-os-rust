@@ -35,7 +35,7 @@ Change these assumptions here before implementation if the project targets real 
 - [x] Preserve the hart ID and device-tree pointer passed by firmware
 - [x] Implement an SBI call wrapper
 - [x] Implement early console output
-- [ ] Add `print!` and `println!` macros
+- [x] Add `print!` and `println!` macros
 - [ ] Add a panic handler that prints the panic location and halts
 - [ ] Print kernel version, hart ID, privilege mode, and memory layout at boot
 - [ ] Parse enough of the device tree to discover RAM, CPUs, UART, and interrupt devices
