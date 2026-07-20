@@ -2,7 +2,10 @@
 #![no_std]
 
 use core::{arch::global_asm, panic::PanicInfo};
-use riscvrust_kernel::boot::{self, BootInfo};
+use riscvrust_kernel::{
+    boot::{self, BootInfo},
+    console,
+};
 
 global_asm!(include_str!("entry.S"));
 
@@ -14,6 +17,10 @@ pub extern "C" fn rust_main(hart_id: usize, device_tree_address: usize) -> ! {
     }
 
     if riscvrust_sbi::base::specification_version().is_err() {
+        halt();
+    }
+
+    if console::write_str("riscvrust: early console online\n").is_err() {
         halt();
     }
 

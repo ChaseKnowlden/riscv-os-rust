@@ -34,7 +34,7 @@ Change these assumptions here before implementation if the project targets real 
 - [x] Clear `.bss` during early boot
 - [x] Preserve the hart ID and device-tree pointer passed by firmware
 - [x] Implement an SBI call wrapper
-- [ ] Implement early console output
+- [x] Implement early console output
 - [ ] Add `print!` and `println!` macros
 - [ ] Add a panic handler that prints the panic location and halts
 - [ ] Print kernel version, hart ID, privilege mode, and memory layout at boot

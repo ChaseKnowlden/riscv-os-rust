@@ -68,11 +68,12 @@ includes output similar to:
 Domain0 Next Address        : 0x0000000080200000
 Domain0 Next Mode           : S-mode
 Boot HART ID                : 0
+riscvrust: early console online
 ```
 
-The terminal is then intentionally silent because the Rust entry function
-parks the hart; kernel console output is a later milestone. This silence is
-expected and does not mean that QEMU failed to load the kernel.
+The final line is emitted by the kernel through the SBI debug console and
+confirms that execution reached Rust successfully. The kernel then parks the
+hart, so no further output is expected yet.
 
 Press `Ctrl-A`, then `X`, to exit QEMU's non-graphical console.
 

@@ -8,6 +8,9 @@ use core::arch::asm;
 /// The standard SBI base extension ID.
 pub const BASE_EXTENSION_ID: i32 = 0x10;
 
+/// The standard SBI debug console extension ID (`"DBCN"`).
+pub const DEBUG_CONSOLE_EXTENSION_ID: i32 = 0x4442_434e;
+
 /// Standard errors returned by SBI functions.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Error {
@@ -136,6 +139,44 @@ pub mod base {
         // SAFETY: This base query accepts no arguments, exposes no memory, and
         // has no platform side effects beyond returning the version number.
         unsafe { super::call(BASE_EXTENSION_ID, GET_SPEC_VERSION, [0; 6]) }.into_result()
+    }
+}
+
+/// Functions from the SBI debug console extension.
+pub mod debug_console {
+    use super::Error;
+
+    #[cfg(target_arch = "riscv64")]
+    use super::DEBUG_CONSOLE_EXTENSION_ID;
+
+    #[cfg(target_arch = "riscv64")]
+    const CONSOLE_WRITE_BYTE: i32 = 2;
+
+    /// Writes one byte to the firmware-provided debug console.
+    ///
+    /// This operation does not expose kernel memory to firmware and is safe to
+    /// use before page tables or a memory allocator have been initialized.
+    pub fn write_byte(byte: u8) -> Result<(), Error> {
+        #[cfg(target_arch = "riscv64")]
+        {
+            // SAFETY: The byte-write function receives its value directly in
+            // a0 and has no pointer, lifetime, or alignment requirements.
+            unsafe {
+                super::call(
+                    DEBUG_CONSOLE_EXTENSION_ID,
+                    CONSOLE_WRITE_BYTE,
+                    [usize::from(byte), 0, 0, 0, 0, 0],
+                )
+            }
+            .into_result()
+            .map(|_| ())
+        }
+
+        #[cfg(not(target_arch = "riscv64"))]
+        {
+            let _ = byte;
+            Err(Error::NotSupported)
+        }
     }
 }
 
