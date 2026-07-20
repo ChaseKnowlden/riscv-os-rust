@@ -6,6 +6,7 @@ use riscvrust_arch::halt;
 use riscvrust_kernel::{
     boot::{self, BootInfo},
     memory::{self, Region},
+    platform::Platform,
 };
 
 global_asm!(include_str!("entry.S"));
@@ -42,6 +43,44 @@ pub extern "C" fn rust_main(hart_id: usize, device_tree_address: usize) -> ! {
     print_region("bss (RW)", layout.bss);
     print_region("boot stack", layout.boot_stack);
 
+    // SAFETY: OpenSBI passes a resident, immutable FDT pointer in a1 according
+    // to the selected platform boot contract.
+    let platform = unsafe { Platform::from_pointer(boot_info.device_tree_address()) }
+        .unwrap_or_else(|error| panic!("invalid firmware device tree: {error:?}"));
+    platform
+        .validate()
+        .unwrap_or_else(|error| panic!("required platform device missing: {error:?}"));
+
+    riscvrust_kernel::println!(
+        "  device-tree discovery ({} bytes):",
+        platform.device_tree_size()
+    );
+    platform.for_each_memory_region(|ram| {
+        print_address_range("RAM", ram.base, ram.size);
+    });
+
+    let cpu_count = platform.cpu_count();
+    riscvrust_kernel::print!("    CPUs ({cpu_count}):");
+    platform.for_each_cpu_hart(|hart_id| {
+        riscvrust_kernel::print!(" {hart_id}");
+    });
+    riscvrust_kernel::println!();
+
+    let uart = platform.uart().expect("validated UART disappeared");
+    print_address_range("UART", uart.registers.base, uart.registers.size);
+    riscvrust_kernel::println!("      interrupt: {:?}", uart.interrupt);
+
+    let plic = platform.plic().expect("validated PLIC disappeared");
+    print_address_range("PLIC", plic.registers.base, plic.registers.size);
+    riscvrust_kernel::println!("      interrupt sources: {:?}", plic.interrupt_sources);
+
+    let clint = platform.clint().expect("validated CLINT disappeared");
+    print_address_range("CLINT", clint.base, clint.size);
+    riscvrust_kernel::println!(
+        "      CPU interrupt controllers: {}",
+        platform.cpu_interrupt_controller_count()
+    );
+
     halt()
 }
 
@@ -52,6 +91,16 @@ fn print_region(name: &str, region: Region) {
         region.end(),
         region.size(),
     );
+}
+
+fn print_address_range(name: &str, base: usize, size: Option<usize>) {
+    match size {
+        Some(size) => riscvrust_kernel::println!(
+            "    {name:<5} 0x{base:016x}..0x{:016x} ({size} bytes)",
+            base + size
+        ),
+        None => riscvrust_kernel::println!("    {name:<5} 0x{base:016x} (size unspecified)"),
+    }
 }
 
 #[panic_handler]

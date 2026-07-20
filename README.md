@@ -77,6 +77,15 @@ riscvrust kernel v0.1.0
     kernel      0x0000000080200000..0x0000000080209000 (36864 bytes)
     text (RX)   0x0000000080200000..0x0000000080202d4e (11598 bytes)
     ...
+  device-tree discovery (6084 bytes):
+    RAM   0x0000000080000000..0x0000000088000000 (134217728 bytes)
+    CPUs (1): 0
+    UART  0x0000000010000000..0x0000000010000100 (256 bytes)
+      interrupt: Some(10)
+    PLIC  0x000000000c000000..0x000000000c600000 (6291456 bytes)
+      interrupt sources: Some(95)
+    CLINT 0x0000000002000000..0x0000000002010000 (65536 bytes)
+      CPU interrupt controllers: 1
 ```
 
 The kernel banner is emitted through the SBI debug console and confirms that

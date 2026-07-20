@@ -6,6 +6,7 @@ publish.workspace = true
 rust-version.workspace = true
 
 [dependencies]
+fdt.workspace = true
 riscvrust-arch.workspace = true
 riscvrust-sbi.workspace = true
 
