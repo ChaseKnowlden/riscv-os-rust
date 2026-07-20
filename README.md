@@ -68,12 +68,20 @@ includes output similar to:
 Domain0 Next Address        : 0x0000000080200000
 Domain0 Next Mode           : S-mode
 Boot HART ID                : 0
-riscvrust: early console online
+
+riscvrust kernel v0.1.0
+  hart ID:       0
+  privilege:     supervisor (S-mode)
+  device tree:   0x0000000087e00000
+  memory layout:
+    kernel      0x0000000080200000..0x0000000080209000 (36864 bytes)
+    text (RX)   0x0000000080200000..0x0000000080202d4e (11598 bytes)
+    ...
 ```
 
-The final line is emitted by the kernel through the SBI debug console and
-confirms that execution reached Rust successfully. The kernel then parks the
-hart, so no further output is expected yet.
+The kernel banner is emitted through the SBI debug console and confirms that
+execution reached Rust successfully. Exact section boundaries vary with the
+build. The kernel then parks the hart, so no further output is expected yet.
 
 If the kernel panics, it prints a `KERNEL PANIC` diagnostic containing the
 source file, line, column, and panic message before parking the hart.

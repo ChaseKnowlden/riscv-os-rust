@@ -4,6 +4,7 @@
 
 pub mod boot;
 pub mod console;
+pub mod memory;
 
 /// Prints formatted text through the early kernel console.
 #[macro_export]

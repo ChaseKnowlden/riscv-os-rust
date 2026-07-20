@@ -37,7 +37,7 @@ Change these assumptions here before implementation if the project targets real 
 - [x] Implement early console output
 - [x] Add `print!` and `println!` macros
 - [x] Add a panic handler that prints the panic location and halts
-- [ ] Print kernel version, hart ID, privilege mode, and memory layout at boot
+- [x] Print kernel version, hart ID, privilege mode, and memory layout at boot
 - [ ] Parse enough of the device tree to discover RAM, CPUs, UART, and interrupt devices
 - [ ] Implement a clean shutdown path for QEMU
 
