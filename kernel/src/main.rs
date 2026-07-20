@@ -13,6 +13,10 @@ pub extern "C" fn rust_main(hart_id: usize, device_tree_address: usize) -> ! {
         halt();
     }
 
+    if riscvrust_sbi::base::specification_version().is_err() {
+        halt();
+    }
+
     halt()
 }
 

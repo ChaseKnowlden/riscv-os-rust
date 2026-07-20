@@ -33,7 +33,7 @@ Change these assumptions here before implementation if the project targets real 
 
 - [x] Clear `.bss` during early boot
 - [x] Preserve the hart ID and device-tree pointer passed by firmware
-- [ ] Implement an SBI call wrapper
+- [x] Implement an SBI call wrapper
 - [ ] Implement early console output
 - [ ] Add `print!` and `println!` macros
 - [ ] Add a panic handler that prints the panic location and halts
