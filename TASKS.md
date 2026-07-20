@@ -39,7 +39,7 @@ Change these assumptions here before implementation if the project targets real 
 - [x] Add a panic handler that prints the panic location and halts
 - [x] Print kernel version, hart ID, privilege mode, and memory layout at boot
 - [x] Parse enough of the device tree to discover RAM, CPUs, UART, and interrupt devices
-- [ ] Implement a clean shutdown path for QEMU
+- [x] Implement a clean shutdown path for QEMU
 
 **Exit criterion:** The kernel prints a boot banner and useful panic diagnostics, then can shut down QEMU.
 

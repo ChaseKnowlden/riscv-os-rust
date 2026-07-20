@@ -11,6 +11,9 @@ pub const BASE_EXTENSION_ID: i32 = 0x10;
 /// The standard SBI debug console extension ID (`"DBCN"`).
 pub const DEBUG_CONSOLE_EXTENSION_ID: i32 = 0x4442_434e;
 
+/// The standard SBI system reset extension ID (`"SRST"`).
+pub const SYSTEM_RESET_EXTENSION_ID: i32 = 0x5352_5354;
+
 /// Standard errors returned by SBI functions.
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Error {
@@ -180,6 +183,70 @@ pub mod debug_console {
     }
 }
 
+/// Functions from the SBI system reset extension.
+pub mod system_reset {
+    use core::convert::Infallible;
+
+    use super::Error;
+
+    #[cfg(target_arch = "riscv64")]
+    use super::SYSTEM_RESET_EXTENSION_ID;
+
+    #[cfg(target_arch = "riscv64")]
+    const SYSTEM_RESET: i32 = 0;
+
+    /// Standard system reset types.
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    #[repr(u32)]
+    pub enum ResetType {
+        Shutdown = 0,
+        ColdReboot = 1,
+        WarmReboot = 2,
+    }
+
+    /// Standard reasons for a system reset.
+    #[derive(Clone, Copy, Debug, Eq, PartialEq)]
+    #[repr(u32)]
+    pub enum ResetReason {
+        None = 0,
+        SystemFailure = 1,
+    }
+
+    /// Requests a platform reset and returns only if the request fails.
+    pub fn reset(kind: ResetType, reason: ResetReason) -> Result<Infallible, Error> {
+        #[cfg(target_arch = "riscv64")]
+        {
+            // SAFETY: SRST takes scalar enum values, exposes no memory to
+            // firmware, and its system-level side effect is this API's purpose.
+            let returned = unsafe {
+                super::call(
+                    SYSTEM_RESET_EXTENSION_ID,
+                    SYSTEM_RESET,
+                    [kind as usize, reason as usize, 0, 0, 0, 0],
+                )
+            };
+
+            match returned.into_result() {
+                Err(error) => Err(error),
+                // The specification forbids a successful SRST call from
+                // returning. Treat a nonconforming return as a generic error.
+                Ok(_) => Err(Error::Failed),
+            }
+        }
+
+        #[cfg(not(target_arch = "riscv64"))]
+        {
+            let _ = (kind, reason);
+            Err(Error::NotSupported)
+        }
+    }
+
+    /// Powers down the system without reporting a failure reason.
+    pub fn shutdown() -> Result<Infallible, Error> {
+        reset(ResetType::Shutdown, ResetReason::None)
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -230,5 +297,11 @@ mod tests {
         };
 
         assert_eq!(returned.into_result(), Err(Error::Unknown(-99)));
+    }
+
+    #[test]
+    #[cfg(not(target_arch = "riscv64"))]
+    fn system_reset_is_unavailable_on_the_host() {
+        assert_eq!(system_reset::shutdown(), Err(Error::NotSupported));
     }
 }

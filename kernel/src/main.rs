@@ -81,7 +81,11 @@ pub extern "C" fn rust_main(hart_id: usize, device_tree_address: usize) -> ! {
         platform.cpu_interrupt_controller_count()
     );
 
-    halt()
+    riscvrust_kernel::println!("  shutdown: requesting SBI system power-off");
+    match riscvrust_sbi::system_reset::shutdown() {
+        Ok(never) => match never {},
+        Err(error) => panic!("SBI system shutdown failed: {error:?}"),
+    }
 }
 
 fn print_region(name: &str, region: Region) {

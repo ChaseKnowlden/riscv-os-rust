@@ -86,16 +86,19 @@ riscvrust kernel v0.1.0
       interrupt sources: Some(95)
     CLINT 0x0000000002000000..0x0000000002010000 (65536 bytes)
       CPU interrupt controllers: 1
+  shutdown: requesting SBI system power-off
 ```
 
 The kernel banner is emitted through the SBI debug console and confirms that
 execution reached Rust successfully. Exact section boundaries vary with the
-build. The kernel then parks the hart, so no further output is expected yet.
+build. After discovery completes, the kernel requests an SBI system shutdown
+and QEMU exits successfully without manual intervention.
 
 If the kernel panics, it prints a `KERNEL PANIC` diagnostic containing the
 source file, line, column, and panic message before parking the hart.
 
-Press `Ctrl-A`, then `X`, to exit QEMU's non-graphical console.
+If QEMU is paused for debugging or the kernel parks after a panic, press
+`Ctrl-A`, then `X`, to exit its non-graphical console.
 
 ## Build and test
 
